@@ -23,10 +23,13 @@
   register: node_repo
 
 # Source https://www.cyberithub.com/solved-failed-to-download-metadata-for-repo-appstream/
+- name: cd to yum repos
+  command: cd /etc/yum.repos.d/
+
+# Source https://www.cyberithub.com/solved-failed-to-download-metadata-for-repo-appstream/
 - name: Update CentOS Mirror Lists 
   command: {{ item }}
   with_items:
-    - cd /etc/yum.repos.d/
     - sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
     - sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
   when: ansible_distribution_major_version | int >= 7

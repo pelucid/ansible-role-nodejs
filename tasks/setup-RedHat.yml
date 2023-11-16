@@ -24,15 +24,11 @@
 
 # Source https://www.cyberithub.com/solved-failed-to-download-metadata-for-repo-appstream/
 - name: cd to yum repos
-  command: cd /etc/yum.repos.d/
+  command: dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
 
 # Source https://www.cyberithub.com/solved-failed-to-download-metadata-for-repo-appstream/
 - name: Update CentOS Mirror Lists 
-  command: "{{ item }}"
-  with_items:
-    - sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
-    - sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-  when: ansible_distribution_major_version | int >= 7
+  command: dnf distro-sync
   
 - name: Add Nodesource repositories for Node.js (CentOS 7+).
   yum:

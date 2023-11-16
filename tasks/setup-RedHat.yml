@@ -22,6 +22,11 @@
   when: ansible_distribution_major_version | int < 7
   register: node_repo
 
+# Source https://www.cyberithub.com/solved-failed-to-download-metadata-for-repo-appstream/
+- name: Update CentOS Mirror Lists 
+  ansible.builtin.command: cd /etc/yum.repos.d/; sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*; sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+  when: ansible_distribution_major_version | int >= 7
+  
 - name: Add Nodesource repositories for Node.js (CentOS 7+).
   yum:
     name: "https://rpm.nodesource.com/{{ nodejs_rhel_rpm_dir }}/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/nodesource-release-el{{ ansible_distribution_major_version }}-1.noarch.rpm"

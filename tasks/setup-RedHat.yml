@@ -22,17 +22,14 @@
   when: ansible_distribution_major_version | int < 7
   register: node_repo
 
-- name: one
-  command: dnf install centos-release
-
-- name: two
-  command: sudo dnf distro-sync
-
-- name: Update mirror lists
-  command: sudo dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
-
-
   
+- name: Ensure Node.js AppStream module is disabled (CentOS 7+).
+  command: yum module disable -y nodejs
+  register: module_disable
+  changed_when: "'Nothing to do.' not in module_disable.stdout"
+  when: ansible_distribution_major_version | int >= 7
+
+
 - name: Add Nodesource repositories for Node.js (CentOS 7+).
   yum:
     name: "https://rpm.nodesource.com/{{ nodejs_rhel_rpm_dir }}/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}/nodesource-release-el{{ ansible_distribution_major_version }}-1.noarch.rpm"
@@ -45,11 +42,6 @@
   when: node_repo is changed
   tags: ['skip_ansible_lint']
 
-- name: Ensure Node.js AppStream module is disabled (CentOS 8+).
-  command: yum module disable -y nodejs
-  register: module_disable
-  changed_when: "'Nothing to do.' not in module_disable.stdout"
-  when: ansible_distribution_major_version | int >= 8
 
 - name: Ensure Node.js and npm are installed.
   yum:

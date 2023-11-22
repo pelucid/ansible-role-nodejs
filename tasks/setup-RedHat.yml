@@ -22,6 +22,9 @@
   when: ansible_distribution_major_version | int < 7
   register: node_repo
 
+- name: update dnf
+  command: sudo dnf update -y
+  
 - name: Update mirror lists
   command: sudo dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
 

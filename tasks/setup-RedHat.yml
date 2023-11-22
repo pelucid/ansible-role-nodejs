@@ -22,10 +22,10 @@
   when: ansible_distribution_major_version | int < 7
   register: node_repo
 
-- name: 1
+- name: one
   command: dnf install centos-release
 
-- name: 2
+- name: two
   command: sudo dnf distro-sync
 
 - name: Update mirror lists

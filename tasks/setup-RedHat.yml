@@ -22,16 +22,16 @@
   when: ansible_distribution_major_version | int < 7
   register: node_repo
 
-- name: Update CentOS Mirror Lists 
-  command: rm -r /var/cache/dnf
+- name: Update mirror lists
+  command: cd /etc/yum.repos.d/
   when: ansible_distribution_major_version | int >= 7
 
-- name: Update CentOS Mirror Lists 
-  command: dnf upgrade -y
+- name: Update Mirror Lists 2
+  command: sed -i '/etc/yum.repos.d/s/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
   when: ansible_distribution_major_version | int >= 7
 
-- name: Update CentOS Mirror Lists 
-  command: dnf update -y
+- name: Update Mirror Lists 3
+  command: sed -i '/etc/yum.repos.d/s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
   when: ansible_distribution_major_version | int >= 7
   
 - name: Add Nodesource repositories for Node.js (CentOS 7+).

@@ -23,9 +23,16 @@
   register: node_repo
 
 - name: Update CentOS Mirror Lists 
-  command: dnf clean all && rm -r /var/cache/dnf  && dnf upgrade -y && dnf update -y 
+  command: rm -r /var/cache/dnf
   when: ansible_distribution_major_version | int >= 7
 
+- name: Update CentOS Mirror Lists 
+  command: dnf upgrade -y
+  when: ansible_distribution_major_version | int >= 7
+
+- name: Update CentOS Mirror Lists 
+  command: dnf update -y
+  when: ansible_distribution_major_version | int >= 7
   
 - name: Add Nodesource repositories for Node.js (CentOS 7+).
   yum:
